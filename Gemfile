@@ -30,5 +30,9 @@ group :extra do
 end
 
 group :doc do
-  gem 'rdoc'
+	gem 'rdoc', '< 5.0'
 end
+
+gem 'path_expander', '1.0.2'
+gem 'minitest', '5.11.3'
+gem 'minitest-sprint', '< 1.2.0'

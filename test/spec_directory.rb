@@ -119,6 +119,21 @@ describe Rack::Directory do
     res.must_be :forbidden?
   end
 
+  it "not allow directory traversal via root prefix bypass" do
+    Dir.mktmpdir do |dir|
+      root = File.join(dir, "root")
+      outside = "#{root}_test"
+      FileUtils.mkdir_p(root)
+      FileUtils.mkdir_p(outside)
+      FileUtils.touch(File.join(outside, "test.txt"))
+
+      app = Rack::Directory.new(root)
+      res = Rack::MockRequest.new(app).get("/../#{File.basename(outside)}/")
+
+      res.must_be :forbidden?
+    end
+  end
+
   it "404 if it can't find the file" do
     res = Rack::MockRequest.new(Rack::Lint.new(app)).
       get("/cgi/blubb")
